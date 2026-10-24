@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formación Ética y Ciudadana — 3° Año | Ciclo Lectivo 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            institucional: {
+              50: '#f0f4f8',
+              100: '#d9e2ec',
+              500: '#2b6cb0',
+              700: '#1a365d',
+              800: '#102a43',
+              900: '#0a192f',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #area-impresion, #area-impresion * {
+        visibility: visible;
+      }
+      #area-impresion {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        background: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-200">
+
+  <!-- ENCABEZADO INSTITUCIONAL SUPERIOR -->
+  <header class="bg-institucional-800 text-white shadow-lg sticky top-0 z-40 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-xs uppercase tracking-widest text-sky-300 font-semibold">
+          <span>Provincia de Misiones • Educación Secundaria Orientada</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight mt-0.5">
+          Formación Ética y Ciudadana — 3.° Año
+        </h1>
+        <p class="text-xs text-slate-300 mt-0.5">
+          Cuadernillo Pedagógico Interactivo • Prof. Alberto Carlos Frías • Ciclo Lectivo 2026
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Buscador -->
+        <div class="relative w-full md:w-64">
+          <input 
+            type="text" 
+            id="buscador-temas" 
+            placeholder="Buscar clase o concepto..." 
+            class="w-full pl-9 pr-3 py-1.5 rounded-lg bg-institucional-900/80 border border-slate-600 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400"
+            oninput="filtrarClases(this.value)"
+          >
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+
+        <!-- Botón Modo Oscuro -->
+        <button 
+          onclick="toggleDarkMode()" 
+          class="p-2 rounded-lg bg-institucional-700 hover:bg-institucional-500 text-amber-300 transition"
+          title="Cambiar modo claro/oscuro"
+        >
+          <svg id="icono-tema" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 no-print">
+
+    <!-- MENÚ LATERAL DE UNIDADES Y CLASES -->
+    <aside class="lg:col-span-4 xl:col-span-3">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden sticky top-24">
+        <div class="bg-slate-100 dark:bg-slate-700/60 px-4 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <h2 class="font-bold text-sm uppercase tracking-wider text-slate-700 dark:text-slate-200">
+            Programa Anual (32 Clases)
+          </h2>
+          <span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300">
+            32 Activas
+          </span>
+        </div>
+        <nav id="menu-unidades" class="divide-y divide-slate-200 dark:divide-slate-700 max-h-[75vh] overflow-y-auto">
+          <!-- Renderizado dinámicamente por JS -->
+        </nav>
+      </div>
+    </aside>
+
+    <!-- ÁREA CENTRAL DE CONTENIDO DE LA CLASE -->
+    <main class="lg:col-span-8 xl:col-span-9">
+      <div id="contenedor-clase" class="bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
+        <!-- Renderizado dinámicamente por JS -->
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ÁREA OCULTA FORMATEADA EXCLUSIVAMENTE PARA IMPRESIÓN / PDF A4 DEL ALUMNO -->
+  <div id="area-impresion" class="hidden print:block p-8 text-black bg-white">
+    <div id="contenido-imprimible"></div>
+  </div>
+
+  <!-- LÓGICA Y BASE DE DATOS EXTRAÍDA DEL CUADERNO ÉTICA 2026 -->
+  <script>
+    const programaCurricular = [
+      {
+        id: "u1",
+        numero: "Unidad 1",
+        titulo: "La Dimensión Ética",
+        activa: false,
+        clases: [
+          {
+            id: "c1",
+            numero: "Clase 1",
+            titulo: "Introducción a la Ética y la Moral",
+            desarrollada: true,
+            normativa: "Principios Generales de Convivencia Social y Deberes Cívicos • Ordenamiento Constitucional Argentino",
+            teoria: [
+              "En el estudio de nuestra materia comenzamos distinguiendo dos conceptos fundamentales que suelen confundirse en el habla diaria pero que tienen alcances diferentes. La <strong>moral</strong> (conjunto normativo, consuetudinario y valórico de una comunidad, es decir, el sistema de reglas, costumbres, hábitos y valores que una sociedad construye a lo largo de su historia para regular la convivencia diaria y señalar qué conductas se consideran correctas o incorrectas) funciona como una guía práctica e inmediata en nuestra vida cotidiana en familia, en el barrio o en la escuela.",
+              "Por su parte, la <strong>ética</strong> (disciplina filosófica de segundo orden, lo que significa que es una rama de la filosofía que no dicta reglas por costumbre, sino que somete a un examen crítico, reflexivo y racional los preceptos de la moral vigente) se encarga de analizar por qué consideramos buenas o justas determinadas acciones. Mientras la moral responde a la pregunta práctica sobre <em>qué debo hacer</em> según las pautas de mi grupo social, la ética indaga sobre <em>por qué debo hacerlo</em>, buscando fundamentos racionales y universales para el obrar humano.",
+              "En la convivencia escolar e institucional distinguimos así entre la <strong>moral vivida</strong> (la práctica habitual de cumplir normas aprendidas por tradición o socialización) y la <strong>ética reflexiva</strong> (el ejercicio intelectual de evaluar la justicia y validez universal de esas normas). Comprender esta diferencia nos permite pasar de obedecer reglas de manera mecánica a sostener principios de convivencia basados en la dignidad y el respeto mutuo."
+            ],
+            cuadro: {
+              columnas: ["Dimensión de Análisis", "Moral (Moral Vivida)", "Ética (Ética Reflexiva)"],
+              filas: [
+                ["Concepto Técnico y Sencillo", "Conjunto consuetudinario de normas y costumbres (reglas prácticas que una comunidad adopta históricamente).", "Disciplina filosófica de segundo orden (reflexión crítica, sistemática y racional sobre las normas morales)."],
+                ["Nivel de Actuación", "Práctico e inmediato: regula los actos cotidianos indicando qué es correcto o incorrecto.", "Teórico y fundamentador: indaga por qué una norma es justa o universalmente válida."],
+                ["Origen de la Norma", "Social e histórico: surge de la tradición, la cultura y los hábitos comunitarios.", "Racional y filosófico: exige argumentación lógica y examen crítico personal."],
+                ["Ejemplo Cotidiano", "Devolver una billetera encontrada en la calle porque así nos enseñaron que actúa una persona honrada.", "Reflexionar sobre por qué la honestidad y el respeto a la propiedad ajena son indispensables para la confianza social."]
+              ]
+            },
+            caso: {
+              titulo: "El hallazgo en el patio del colegio durante el recreo",
+              relato: "Durante el segundo recreo en el colegio secundario de Oberá, un grupo de estudiantes de 3.° año encuentra cerca del kiosco escolar una billetera sin identificación que contiene el dinero exacto que un alumno de primer año había traído para pagar su pasaje de colectivo y comprar útiles. Uno de los jóvenes sugiere repartirse el dinero argumentando que 'el que encuentra algo en el piso sin nombre no está robando'. Otro compañero se opone y sostiene que deben entregarla en Preceptoría, no solo porque el acuerdo escolar de convivencia lo exige, sino porque quedarse con algo ajeno daña directamente a un compañero y destruye la confianza dentro de la escuela.",
+              preguntaGuia: "¿Cuál de las posturas se limita a una excusa circunstancial y cómo aparece en el segundo compañero el paso de la norma moral al fundamento ético?"
+            },
+            actividades: [
+              "<strong>Precisión Conceptual:</strong> Redactá con tus propias palabras la diferencia fundamental entre <em>moral vivida</em> (costumbre práctica) y <em>ética reflexiva</em> (examen racional), explicando por qué ambas se complementan en la vida ciudadana.",
+              "<strong>Análisis del Caso Escolar:</strong> A partir del caso leído sobre el hallazgo de la billetera en el recreo, identificá cuál es la norma moral en juego y redactá el argumento ético racional que justifica por qué restituir el objeto a su dueño es un deber hacia la comunidad escolar.",
+              "<strong>Aplicación Institucional:</strong> Enunciá dos normas morales o pautas de conducta que cumplas habitualmente en la escuela o en tu hogar y justificá racionalmente por qué son justas y necesarias para sostener una convivencia armónica."
+            ]
+          },
+          {
+            id: "c2",
+            numero: "Clase 2",
+            titulo: "Autonomía y Heteronomía Moral",
+            desarrollada: true,
+            normativa: "Desarrollo del Juicio Moral • Principio de Autodeterminación y Ciudadanía Democrática",
+            teoria: [
+              "A medida que crecemos y transitamos la adolescencia, cambia el modo en que nos relacionamos con las normas. Llamamos <strong>heteronomía moral</strong> (condición en la cual la voluntad del sujeto se encuentra supeditada a determinaciones o coacciones externas, es decir, cuando una persona actúa o cumple una regla únicamente por imposición de otro, por miedo al castigo, por temor a una sanción disciplinaria o para obtener un premio o aprobación del grupo) a la etapa en que el control de la conducta viene desde afuera.",
+              "En contraposición, la <strong>autonomía moral</strong> (capacidad del individuo de autodeterminarse conforme a principios universales dictados por la razón práctica y la convicción interior, lo que significa gobernarse a sí mismo eligiendo hacer lo correcto porque comprende racionalmente su valor ético) constituye la meta de la madurez ciudadana. Quien actúa con autonomía cumple con su deber ético y respeta al prójimo incluso cuando nadie lo está vigilando.",
+              "En la vida democrática y escolar, superar los <strong>factores exógenos de control</strong> (las presiones externas como la mirada de la autoridad o el qué dirán los demás) para alcanzar la <strong>autorregulación moral</strong> (el gobierno consciente de la propia conducta basado en el juicio crítico) resulta indispensable: una democracia sólida no se sostiene con ciudadanos que solo respetan la ley cuando ven a un inspector, sino con sujetos autónomos comprometidos con el bien común."
+            ],
+            cuadro: {
+              columnas: ["Criterio Comparativo", "Heteronomía Moral", "Autonomía Moral"],
+              filas: [
+                ["Significado Etimológico y Técnico", "Ley que proviene de otro (voluntad condicionada por mandatos o coacciones externas).", "Ley que uno se da a sí mismo (autodeterminación racional fundada en principios éticos propios)."],
+                ["Motivación de la Conducta", "Temor a la sanción punitiva, búsqueda de recompensa o sumisión acrítica a la autoridad o al grupo.", "Convicción interior, respeto a la dignidad humana y comprensión racional del deber."],
+                ["Dependencia de Vigilancia", "Requiere fiscalización externa: si desaparece el control, suele incumplirse la norma.", "Independiente de vigilancia: la conducta recta se mantiene aunque nadie observe."],
+                ["Ejemplo en el Aula", "No copiarse en una evaluación escrita únicamente porque el profesor está mirando fijamente el banco.", "No copiarse por respeto al propio proceso de aprendizaje y al valor de la honestidad intelectual."]
+              ]
+            },
+            caso: {
+              titulo: "La evaluación escrita y el aula sin vigilancia",
+              relato: "Durante una evaluación trimestral de Formación Ética y Ciudadana en 3.° año, el profesor debe retirarse del salón por tres minutos ante un llamado urgente de la Dirección. Apenas se cierra la puerta, varios estudiantes sacan sus teléfonos celulares y apuntes ocultos para copiar las respuestas, diciendo en voz baja: 'Aprovechen ahora que el profe no nos ve y no nos puede sacar la hoja'. Sin embargo, Sofía y Mateo deciden mantener sus carpetas cerradas y resolver el examen únicamente con lo que estudiaron, sosteniendo que engañar en la prueba equivale a engañarse a sí mismos.",
+              preguntaGuia: "¿Cómo se manifiestan la heteronomía y la autonomía moral en la reacción de los distintos alumnos cuando desaparece la vigilancia externa?"
+            },
+            actividades: [
+              "<strong>Fundamentación Ciudadana:</strong> Explicá por qué alcanzar la <em>autonomía moral</em> (autodeterminación por convicción racional) es un requisito indispensable para el ejercicio pleno de la ciudadanía en un sistema democrático.",
+              "<strong>Resolución del Dilema Áulico:</strong> Analizá el caso de la evaluación sin vigilancia docente y clasificá las conductas de los estudiantes explicando qué factores externos (exógenos) o internos guiaron a cada grupo.",
+              "<strong>Transición Experiencial:</strong> Desarrollá un ejemplo concreto de la vida cotidiana de un joven de 15 años donde se evidencie el paso desde una conducta <em>heterónoma</em> hacia una decisión plenamente <em>autónoma</em>, indicando qué valores personales motivaron ese cambio."
+            ]
+          },
+          {
+            id: "c3",
+            numero: "Clase 3",
+            titulo: "Libertad y Responsabilidad",
+            desarrollada: true,
+            normativa: "Art. 19 de la Constitución Nacional • Art. 260 del Código Civil y Comercial de la Nación (Acto Voluntario)",
+            teoria: [
+              "En Formación Ética y Ciudadana establecemos que la <strong>libertad</strong> (facultad consciente de elegir y autodeterminarse entre distintas alternativas de acción, es decir, la capacidad humana de decidir con conciencia qué hacer o no hacer) nunca es absoluta ni ilimitada en la vida social. Nuestro ordenamiento jurídico consagra que la libertad de cada persona halla su límite infranqueable en el ordenamiento legal, las normas de convivencia y los derechos de los demás; pretender actuar sin reconocer esos límites ignorando el daño a terceros degrada la libertad en <strong>libertinaje</strong> (conducta irresponsable y abusiva que vulnera derechos ajenos).",
+              "Por ello, la contrapartida inseparable de la libertad es la <strong>responsabilidad</strong> (del latín <em>respondere</em>, que significa obligación ética y jurídica ineludible de dar cuenta, asumir plenamente los resultados de nuestras decisiones y reparar los daños causados). Libertad y responsabilidad conforman una <strong>relación dialéctica</strong> (un vínculo de mutua dependencia donde no puede existir una sin la otra): solo soy responsable de aquello que elegí libremente, y porque soy libre debo hacerme cargo de las consecuencias de mis actos.",
+              "Conforme al artículo 260 del Código Civil y Comercial de la Nación, para que una acción sea considerada un <strong>acto voluntario</strong> (acción humana imputable sobre la cual recae responsabilidad) deben reunirse tres elementos internos esenciales: el <strong>discernimiento</strong> (madurez y capacidad mental para comprender el significado del acto y distinguir sus consecuencias), la <strong>intención</strong> (propósito deliberado de realizar esa acción específica sin error grave) y la <strong>libertad</strong> (actuar sin presiones físicas ni amenazas externas ilegítimas, es decir, sin coacción)."
+            ],
+            cuadro: {
+              columnas: ["Concepto / Elemento", "Definición Técnica y Precisión Conceptual", "Límite o Consecuencia Práctica"],
+              filas: [
+                ["Libertad", "Facultad de autodeterminación consciente entre diversas opciones de conducta.", "Termina donde comienzan las leyes vigentes y los derechos de las demás personas (Art. 19 C.N.)."],
+                ["Responsabilidad", "Deber ético y jurídico de responder, dar cuenta y asumir las consecuencias del propio obrar.", "Implica afrontar las sanciones o reparar el perjuicio ocasionado por una decisión libre."],
+                ["Requisitos del Acto Voluntario (Art. 260 CCyCN)", "1) Discernimiento (comprender), 2) Intención (querer hacerlo) y 3) Libertad (obrar sin coacción externa).", "Cuando concurren los tres elementos, el sujeto es plenamente responsable de los efectos de su acción."],
+                ["Libertinaje", "Ejercicio abusivo e irreflexivo de la acción que desconoce las normas y lesiona derechos de terceros.", "Quebranta la convivencia comunitaria y genera responsabilidad civil, escolar o penal."]
+              ]
+            },
+            caso: {
+              titulo: "Administración del tiempo, redes sociales y convivencia barrial",
+              relato: "Lucas, alumno de 3.° año, tiene el fin de semana libre antes de una entrega obligatoria del lunes. Ejerciendo su libertad, decide pasar toda la tarde del domingo jugando en línea y escuchando música a volumen máximo en el patio de su casa hasta la medianoche, impidiendo el descanso de su vecino que debe trabajar temprano. El lunes por la mañana no presenta el trabajo práctico en el colegio y se queja diciendo que el profesor es injusto al desaprobarlo, y además se molesta porque su vecino reclamó a su familia por los ruidos molestos.",
+              preguntaGuia: "¿En qué momento Lucas ejerció su libertad personal, cuándo incurrió en una conducta abusiva frente a terceros y qué responsabilidades pretende evadir?"
+            },
+            actividades: [
+              "<strong>Fundamentación Teórica:</strong> Explicá con precisión qué significa la afirmación <em>'La responsabilidad es la otra cara inseparable de la moneda de la libertad'</em> y detallá los tres requisitos del acto voluntario (discernimiento, intención y libertad).",
+              "<strong>Análisis Crítico de Caso:</strong> Evaluá la situación de Lucas diferenciando su decisión académica individual (administración del tiempo de estudio) de su conducta hacia el vecino (vulneración del derecho al descanso), indicando cómo debe responder en cada ámbito.",
+              "<strong>Verificación de Comprensión Aplicada:</strong> Describí un ejemplo real de tu vida cotidiana como adolescente de 15 años (en el estudio, en las redes sociales o en la vía pública) donde ejerzas tu libertad de manera consciente y enumerá las responsabilidades que asumís en esa elección."
+            ]
+          },
+          {
+            id: "c4",
+            numero: "Clase 4",
+            titulo: "El Acto Moral: Intención, Medios y Fines",
+            desarrollada: true,
+            normativa: "Estructura Analítica de la Acción Moral • Deontología y Licitud de los Medios",
+            teoria: [
+              "No todo lo que hacemos diariamente es igual ante la ética: respirar o parpadear son procesos biológicos involuntarios, pero ayudar a un compañero, decir la verdad o engañar son acciones conscientes. Denominamos <strong>acto moral</strong> (acción deliberada, consciente y voluntaria realizada por un ser humano que puede ser valorada éticamente como justa o injusta, correcta o incorrecta) a toda conducta elegida con libertad y discernimiento que impacta en nosotros o en los demás.",
+              "Para evaluar con rigor si un acto moral es éticamente válido, debemos desglosar su <strong>estructura analítica tripartita</strong> (los tres componentes esenciales que integran toda acción voluntaria): en primer lugar, la <strong>intención</strong> (el motivo interno y propósito subjetivo que impulsa a la persona a actuar, es decir, <em>para qué</em> quiere hacerlo); en segundo lugar, los <strong>medios</strong> (los instrumentos, procedimientos, recursos o métodos elegidos para concretar ese propósito, es decir, <em>cómo</em> lo hace); y en tercer lugar, el <strong>fin objetivo o consecuencia</strong> (el resultado real y concreto que la acción produce en el entorno social, es decir, <em>qué efecto</em> generó).",
+              "El principio rector de la ética establece que <strong>la rectitud de la intención jamás convalida el empleo de medios éticamente reprobables</strong> (en palabras sencillas, un buen propósito nunca justifica usar métodos ilegales, violentos o deshonestos). Para que un acto humano sea moralmente íntegro, tanto la intención interior como los medios utilizados y el fin alcanzado deben respetar la dignidad humana y las normas de convivencia."
+            ],
+            cuadro: {
+              columnas: ["Componente del Acto Moral", "Definición Técnica y Conceptual", "Pregunta Clave para el Análisis Ético"],
+              filas: [
+                ["1. Intención (Motivo Subjetivo)", "Propósito interno y deliberado que mueve la voluntad del sujeto antes de obrar.", "¿Qué buscaba lograr internamente la persona al decidir actuar?"],
+                ["2. Medios (Instrumentos y Vías)", "Procedimientos, herramientas o caminos prácticos seleccionados para alcanzar el objetivo.", "¿Los métodos utilizados fueron lícitos, pacíficos y honestos, o vulneraron normas y derechos?"],
+                ["3. Fin Objetivo (Consecuencia)", "Resultado efectivo y verificable que el acto produce en la realidad social e intersubjetiva.", "¿Qué efectos concretos causó la acción sobre los demás y sobre la comunidad?"],
+                ["Regla de Integridad Ética", "Invalidez del axioma 'el fin justifica los medios': un fin noble no legitima un medio ilícito.", "¿Son éticamente válidos los tres elementos (intención, medio y resultado) al mismo tiempo?"]
+              ]
+            },
+            caso: {
+              titulo: "La autorización falsificada para el certamen escolar",
+              relato: "Dos estudiantes de 3.° año prepararon durante semanas un proyecto de ciencias para representar a su escuela en un certamen intercolegial en Posadas. El día del viaje, uno de ellos advierte que olvidó hacer firmar la autorización obligatoria por sus padres, quienes se encuentran trabajando en una zona rural sin señal telefónica. Con el propósito de que su amigo no quede afuera del concurso ni pierda todo el esfuerzo del año, su compañero toma una lapicera e imita la firma del padre en la planilla oficial antes de entregarla al preceptor.",
+              preguntaGuia: "¿Alcanza la buena intención solidaria del compañero para que el acto de falsificar una firma oficial sea éticamente válido?"
+            },
+            actividades: [
+              "<strong>Desglose Estructural:</strong> Describí analíticamente los tres elementos constitutivos del <em>acto moral</em> (intención, medios y fin objetivo) y fundamentá racionalmente por qué el fin nunca justifica la utilización de medios ilegítimos.",
+              "<strong>Evaluación Ética de Caso:</strong> Analizá el caso del estudiante que falsifica la autorización institucional para ayudar a su compañero, identificando por separado cuál fue su <em>intención</em>, cuál fue el <em>medio empleado</em> y cuáles son las <em>consecuencias institucionales y legales</em> de ese acto.",
+              "<strong>Resolución Alternativa de Conflictos:</strong> Evaluá este segundo supuesto del cuadernillo: <em>'Un estudiante quiere defender a un amigo que está siendo agredido verbalmente (intención) y para lograrlo golpea físicamente al agresor dejándolo herido (medio y fin)'</em>. Explicá por qué el medio elegido invalida el acto y qué medio pacífico e institucional debió utilizar."
+            ]
+          }
+        ]
+      },
+      {
+        id: "u2",
+        numero: "Unidad 2",
+        titulo: "Dignidad y Derechos Humanos",
+        activa: false,
+        clases: [
+          { id: "c5", numero: "Clase 5", titulo: "La Persona Humana como Fin en Sí Mismo", desarrollada: true, normativa: "Imperativo Categórico Kantiano • Art. 51 CCyCN", teoria: ["Principios de dignidad y prohibición de instrumentalización."], cuadro: { columnas: ["Criterio", "Precio", "Dignidad"], filas: [["Valor", "Extrínseco", "Intrínseco"]] }, caso: { titulo: "Caso 5", relato: "Relato 5", preguntaGuia: "Pregunta 5?" }, actividades: ["Actividad 5"] },
+          { id: "c6", numero: "Clase 6", titulo: "Historia y Características de los Derechos Humanos", desarrollada: true, normativa: "DUDH 1948", teoria: ["Pilares: Universalidad, Inalienabilidad, Imprescriptibilidad, Indivisibilidad."], cuadro: { columnas: ["Pilar", "Significado"], filas: [["Universalidad", "Para todos"]] }, caso: { titulo: "Caso 6", relato: "Relato 6", preguntaGuia: "Pregunta 6?" }, actividades: ["Actividad 6"] },
+          { id: "c7", numero: "Clase 7", titulo: "Matriz Constitucional y Tratados Internacionales", desarrollada: true, normativa: "Arts. 31 y 75 inc. 22 C.N.", teoria: ["Bloque de Constitucionalidad Federal y supremacía jurídica."], cuadro: { columnas: ["Nivel", "Normas"], filas: [["Cúspide", "Constitución y Tratados"]] }, caso: { titulo: "Caso 7", relato: "Relato 7", preguntaGuia: "Pregunta 7?" }, actividades: ["Actividad 7"] },
+          { id: "c8", numero: "Clase 8", titulo: "Vulneración de Derechos y Garantías Constitucionales", desarrollada: true, normativa: "Arts. 18 y 43 C.N.", teoria: ["Habeas Corpus, Habeas Data y Acción de Amparo."], cuadro: { columnas: ["Garantía", "Protección"], filas: [["Amparo", "Derechos constitucionales"]] }, caso: { titulo: "Caso 8", relato: "Relato 8", preguntaGuia: "Pregunta 8?" }, actividades: ["Actividad 8"] }
+        ]
+      },
+      {
+        id: "u3",
+        numero: "Unidad 3",
+        titulo: "Adolescencia e Identidad",
+        activa: false,
+        clases: [
+          { id: "c9", numero: "Clase 9", titulo: "Construcción de la Identidad en la Adolescencia", desarrollada: true, normativa: "Ley N.° 26.061 • Psicología Evolutiva", teoria: ["La identidad es un constructo psicosocial dinámico y multidimensional."], cuadro: { columnas: ["Aspecto", "Concepto"], filas: [["Singularidad", "Proyecto de vida propio"]] }, caso: { titulo: "Caso 9", relato: "Relato 9", preguntaGuia: "Pregunta 9?" }, actividades: ["Actividad 9"] },
+          { id: "c10", numero: "Clase 10", titulo: "El Grupo de Pares y la Pertenencia Social", desarrollada: true, normativa: "Sociología Juvenil • Pensamiento Crítico", teoria: ["El grupo de pares como espacio de socialización y transición."], cuadro: { columnas: ["Dimensión", "Descripción"], filas: [["Pares", "Soporte afectivo y pertenencia"]] }, caso: { titulo: "Caso 10", relato: "Relato 10", preguntaGuia: "Pregunta 10?" }, actividades: ["Actividad 10"] },
+          { id: "c11", numero: "Clase 11", titulo: "Autoestima y Autocuidado Psicosocial", desarrollada: true, normativa: "Promoción de la Salud Integral", teoria: ["Autoestima como base del autocuidado y preservación de la integridad."], cuadro: { columnas: ["Eje", "Acción"], filas: [["Autocuidado", "Hábitos saludables"]] }, caso: { titulo: "Caso 11", relato: "Relato 11", preguntaGuia: "Pregunta 11?" }, actividades: ["Actividad 11"] },
+          { id: "c12", numero: "Clase 12", titulo: "Respeto por el Cuerpo y Educación Sexual Integral (Ley N.° 26.150)", desarrollada: true, normativa: "Ley Nacional N.° 26.150 (ESI)", teoria: ["Enfoque integral de la sexualidad y principio ético del consentimiento."], cuadro: { columnas: ["Principio", "Alcance"], filas: [["Consentimiento", "Soberanía sobre la intimidad"]] }, caso: { titulo: "Caso 12", relato: "Relato 12", preguntaGuia: "Pregunta 12?" }, actividades: ["Actividad 12"] }
+        ]
+      },
+      {
+        id: "u4",
+        numero: "Unidad 4",
+        titulo: "La Ética en la Era Digital",
+        activa: false,
+        clases: [
+          { id: "c13", numero: "Clase 13", titulo: "Redes Sociales y Ciudadanía Digital", desarrollada: true, normativa: "Ciudadanía Digital • Empatía y Responsabilidad", teoria: ["Ciudadanía digital y combate a la desinformación (fake news)."], cuadro: { columnas: ["Dimensión", "Principio"], filas: [["Ciudadanía", "Responsabilidad cívica"]] }, caso: { titulo: "Caso 13", relato: "Relato 13", preguntaGuia: "Pregunta 13?" }, actividades: ["Actividad 13"] },
+          { id: "c14", numero: "Clase 14", titulo: "Privacidad y Huella Digital", desarrollada: true, normativa: "Protección de Datos Personales • Intimidad", teoria: ["Trazabilidad de la huella digital y derecho a la privacidad."], cuadro: { columnas: ["Concepto", "Alcance"], filas: [["Huella", "Rastro persistente"]] }, caso: { titulo: "Caso 14", relato: "Relato 14", preguntaGuia: "Pregunta 14?" }, actividades: ["Actividad 14"] },
+          { id: "c15", numero: "Clase 15", titulo: "Ética de los Algoritmos e Inteligencia Artificial Educativa", desarrollada: true, normativa: "Ética de la IA • Honestidad Intelectual", teoria: ["Sesgos algorítmicos y uso crítico y auxiliar de la IA en la escuela."], cuadro: { columnas: ["Categoría", "Criterio"], filas: [["Sesgo", "Opacidad técnica"]] }, caso: { titulo: "Caso 15", relato: "Relato 15", preguntaGuia: "Pregunta 15?" }, actividades: ["Actividad 15"] },
+          { id: "c16", numero: "Clase 16", titulo: "Ciberbullying, Grooming y Responsabilidad Digital", desarrollada: true, normativa: "Ley N.° 26.904 (Grooming) • Ciberbullying", teoria: ["Delito penal de grooming y hostigamiento digital entre pares."], cuadro: { columnas: ["Violencia", "Gravedad"], filas: [["Grooming", "Delito federal grave"]] }, caso: { titulo: "Caso 16", relato: "Relato 16", preguntaGuia: "Pregunta 16?" }, actividades: ["Actividad 16"] }
+        ]
+      },
+      {
+        id: "u5",
+        numero: "Unidad 5",
+        titulo: "Valores y Convivencia",
+        activa: false,
+        clases: [
+          { id: "c17", numero: "Clase 17", titulo: "Solidaridad, Justicia y Equidad", desarrollada: true, normativa: "Principios Axiológicos • Justicia Distributiva", teoria: ["Igualdad formal frente a equidad proporcional y solidaridad fraterna."], cuadro: { columnas: ["Valor", "Definición"], filas: [["Equidad", "Oportunidades reales"]] }, caso: { titulo: "Caso 17", relato: "Relato 17", preguntaGuia: "Pregunta 17?" }, actividades: ["Actividad 17"] },
+          { id: "c18", numero: "Clase 18", titulo: "Prejuicios, Estereotipos y Discriminación", desarrollada: true, normativa: "Ley Antidiscriminatoria N.° 23.592", teoria: ["Diferencia entre prejuicio, estereotipo y acto de discriminación."], cuadro: { columnas: ["Sesgo", "Nivel"], filas: [["Discriminación", "Conductual"]] }, caso: { titulo: "Caso 18", relato: "Relato 18", preguntaGuia: "Pregunta 18?" }, actividades: ["Actividad 18"] },
+          { id: "c19", numero: "Clase 19", titulo: "Convivencia Escolar y Comunitaria", desarrollada: true, normativa: "Acuerdos Escolares de Convivencia (AEC) • Alteridad", teoria: ["Construcción activa de un clima institucional democrático basado en AEC."], cuadro: { columnas: ["Enfoque", "Democrático"], filas: [["Normas", "Consenso participativo"]] }, caso: { titulo: "Caso 19", relato: "Relato 19", preguntaGuia: "Pregunta 19?" }, actividades: ["Actividad 19"] },
+          { id: "c20", numero: "Clase 20", titulo: "Dilemas Éticos en la Vida Cotidiana", desarrollada: true, normativa: "Deliberación Racional • Conflicto de Deberes", teoria: ["En crucijadas axiológicas, deliberación racional ponderando consecuencias."], cuadro: { columnas: ["Fase", "Objetivo"], filas: [["Deliberación", "Análisis metódico"]] }, caso: { titulo: "Caso 20", relato: "Relato 20", preguntaGuia: "Pregunta 20?" }, actividades: ["Actividad 20"] }
+        ]
+      },
+      {
+        id: "u6",
+        numero: "Unidad 6",
+        titulo: "Participación Ciudadana",
+        activa: false,
+        clases: [
+          { id: "c21", numero: "Clase 21", titulo: "El Estado y la División de Poderes", desarrollada: true, normativa: "Constitución Nacional • Sistema Republicano y División de Funciones (Montesquieu)", teoria: ["Funciones privativas del Poder Legislativo, Ejecutivo y Judicial."], cuadro: { columnas: ["Poder Estatal", "Función Privativa"], filas: [["Legislativo", "Sanción de leyes"]] }, caso: { titulo: "Caso 21", relato: "Relato 21", preguntaGuia: "Pregunta 21?" }, actividades: ["Actividad 21"] },
+          { id: "c22", numero: "Clase 22", titulo: "La Democracia como Sistema Político y Estilo de Vida", desarrollada: true, normativa: "Democracia Representativa • Cultura Cívica Pluralista", teoria: ["Soberanía popular, Estado de Derecho y protección de minorías."], cuadro: { columnas: ["Dimensión", "Manifestación"], filas: [["Sistema Político", "Soberanía popular y sufragio"]] }, caso: { titulo: "Caso 22", relato: "Relato 22", preguntaGuia: "Pregunta 22?" }, actividades: ["Actividad 22"] },
+          { id: "c23", numero: "Clase 23", titulo: "Formas de Participación Juvenil", desarrollada: true, normativa: "Ciudadanía Activa • Sujetos de Derecho en el Presente", teoria: ["Protagonismo juvenil en organizaciones, voluntariados y colectivos sociales."], cuadro: { columnas: ["Ámbito", "Intervención"], filas: [["Educativo", "Centros de estudiantes"]] }, caso: { titulo: "Caso 23", relato: "Relato 23", preguntaGuia: "Pregunta 23?" }, actividades: ["Actividad 23"] },
+          { id: "c24", numero: "Clase 24", titulo: "Centros de Estudiantes y Marco Normativo (Ley N.° 26.877)", desarrollada: true, normativa: "Ley Nacional N.° 26.877", teoria: ["Garantía legal para la creación y funcionamiento autónomo de centros de estudiantes."], cuadro: { columnas: ["Componente", "Detalle Legal"], filas: [["Marco Legal", "Ley N.° 26.877"]] }, caso: { titulo: "Caso 24", relato: "Relato 24", preguntaGuia: "Pregunta 24?" }, actividades: ["Actividad 24"] }
+        ]
+      },
+      {
+        id: "u7",
+        numero: "Unidad 7",
+        titulo: "Ética y Sociedad Contemporánea",
+        activa: false,
+        clases: [
+          { id: "c25", numero: "Clase 25", titulo: "Consumo Responsable y Soberanía Ciudadana", desarrollada: true, normativa: "Obsolescencia Programada • Estrategia de las 3R", teoria: ["Elección crítica frente al consumismo y reducción de residuos."], cuadro: { columnas: ["Paradigma", "Enfoque"], filas: [["Consumo", "Sustentable y ético"]] }, caso: { titulo: "Caso 25", relato: "Relato 25", preguntaGuia: "Pregunta 25?" }, actividades: ["Actividad 25"] },
+          { id: "c26", numero: "Clase 26", titulo: "Ética Ambiental y 'La Casa Común'", desarrollada: true, normativa: "Biocentrismo • Justicia Intergeneracional", teoria: ["Corresponsabilidad global ante la crisis climática y el valor de la biósfera."], cuadro: { columnas: ["Enfoque", "Visión"], filas: [["Biocentrismo", "Valor intrínseco de la vida"]] }, caso: { titulo: "Caso 26", relato: "Relato 26", preguntaGuia: "Pregunta 26?" }, actividades: ["Actividad 26"] },
+          { id: "c27", numero: "Clase 27", titulo: "Desarrollo Sustentable en la Chacra Misionera", desarrollada: true, normativa: "Selva Paranaense • Agroecología Misionera", teoria: ["Manejo sustentable del suelo rojo y protección de vertientes en Misiones."], cuadro: { columnas: ["Modelo", "Práctica"], filas: [["Agroecología", "Protección de vertientes"]] }, caso: { titulo: "Caso 27", relato: "Relato 27", preguntaGuia: "Pregunta 27?" }, actividades: ["Actividad 27"] }
+        ]
+      },
+      {
+        id: "u8",
+        numero: "Unidad 8",
+        titulo: "Interculturalidad y Frontera",
+        activa: false,
+        clases: [
+          { id: "c28", numero: "Clase 28", titulo: "Diversificación Cultural e Interculturalidad", desarrollada: true, normativa: "Diálogo Simétrico • Superación del Etnocentrismo", teoria: ["Transición del multiculturalismo estanco al diálogo intercultural simétrico."], cuadro: { columnas: ["Enfoque", "Visión"], filas: [["Interculturalidad", "Diálogo simétrico"]] }, caso: { titulo: "Caso 28", relato: "Relato 28", preguntaGuia: "Pregunta 28?" }, actividades: ["Actividad 28"] },
+          { id: "c29", numero: "Clase 29", titulo: "Identidad Regional Misionera y Convivencia Transfronteriza", desarrollada: true, normativa: "Nación Mbya Guaraní • Frontera con Brasil y Paraguay", teoria: ["Crisol transfronterizo misionero y convivencia vecinal regional."], cuadro: { columnas: ["Eje", "Aporte"], filas: [["Legado", "Nación Mbya Guaraní"]] }, caso: { titulo: "Caso 29", relato: "Relato 29", preguntaGuia: "Pregunta 29?" }, actividades: ["Actividad 29"] },
+          { id: "c30", numero: "Clase 30", titulo: "Diversidad Lingüística y Convivencia en el Aula", desarrollada: true, normativa: "Pluralismo Lingüístico • Español, Guaraní y Portuñol", teoria: ["Erradicación del prejuicio idiomático y valoración del patrimonio lingüístico."], cuadro: { columnas: ["Dimensión", "Criterio"], filas: [["Pluralismo", "Patrimonio inmaterial"]] }, caso: { titulo: "Caso 30", relato: "Relato 30", preguntaGuia: "Pregunta 30?" }, actividades: ["Actividad 30"] }
+        ]
+      },
+      {
+        id: "u9",
+        numero: "Integración Final",
+        titulo: "Resolución de Conflictos y Proyecto",
+        activa: true,
+        clases: [
+          {
+            id: "c31",
+            numero: "Clase 31",
+            titulo: "Resolución Pacífica de Conflictos y Mediación Escolar",
+            desarrollada: true,
+            normativa: "Mediación Institucional • Esquema 'Ganar-Ganar' en la Convivencia Escolar",
+            teoria: [
+              "El <strong>conflicto</strong> es consustancial y natural a las relaciones sociales debido a la pluralidad de intereses y opiniones; lo destructivo y evitable no es el conflicto en sí, sino la utilización de la violencia para gestionarlo.",
+              "La resolución pacífica de controversias comprende métodos como el diálogo asertivo, la negociación directa y la <strong>mediación escolar</strong> (dispositivo pedagógico en el cual un tercero neutral e imparcial asiste a las partes en disputa para restablecer los canales de comunicación y acordar una solución colaborativa bajo el esquema <strong>'ganar-ganar'</strong>)."
+            ],
+            cuadro: {
+              columnas: ["Estrategia de Resolución", "Enfoque Tradicional (Punitivo / Perder-Ganar)", "Mediación Escolar (Esquema Ganar-Ganar)"],
+              filas: [
+                ["Intervención del Adulto", "Imposición vertical de sanciones unilaterales sin escuchar profundamente a las partes.", "Intervención de un tercero neutral e imparcial que facilita el diálogo autogestionado."],
+                ["Resultado del Conflicto", "Una parte resulta vencida y castigada; la otra triunfa, generando resentimiento latente.", "Acuerdo colaborativo donde ambas partes satisfacen sus intereses esenciales y cuidan el vínculo."],
+                ["Objetivo Pedagógico", "Control disciplinario inmediato y disuasión mediante el temor a la amonestación.", "Formación ciudadana en empatía, escucha activa, confidencialidad y responsabilidad."]
+              ]
+            },
+            caso: {
+              titulo: "El litigio por el espacio de trabajo en el taller de diseño",
+              relato: "Dos alumnos discuten de manera acalorada al punto de casi llegar a las manos porque ambos reclaman la misma mesa de trabajo con mejor iluminación para realizar una maqueta escolar. En lugar de aplicar una sanción directa de suspensión, los preceptores derivan el caso al espacio de mediación institucional del BOP N.° 65.",
+              preguntaGuia: "¿Cómo logra un mediador escolar transformar una disputa agresiva en un acuerdo colaborativo 'ganar-ganar'?"
+            },
+            actividades: [
+              "<strong>Cualidades del Mediador:</strong> Describí las tres condiciones éticas y comunicacionales esenciales que debe reunir un mediador escolar (neutralidad, confidencialidad, escucha activa).",
+              "<strong>Secuencia Procedimental:</strong> Elaborá una secuencia procedimental de tres etapas para la tramitación pacífica de un conflicto de intereses en el aula.",
+              "<strong>Aplicación Práctica:</strong> Explicá por qué la mediación institucional fortalece la autonomía moral de los estudiantes frente a la imposición punitiva."
+            ]
+          },
+          {
+            id: "c32",
+            numero: "Clase 32",
+            titulo: "Proyecto Integrador Comunitario Final",
+            desarrollada: true,
+            normativa: "Aprendizaje Basado en Proyectos (ABP) • Síntesis Anual de Ciudadanía Activa",
+            teoria: [
+              "El <strong>Aprendizaje Basado en Proyectos (ABP)</strong> en Formación Ética y Ciudadana constituye la instancia de síntesis donde convergen todos los saberes axiológicos, cívicos, ambientales y digitales adquiridos a lo largo del ciclo lectivo 2026.",
+              "Promueve que los estudiantes diseñen, ejecuten y evalúen de manera colaborativa una intervención concreta (Proyecto Integrador Comunitario: 'Pequeñas Acciones, Grandes Cambios') destinada a mejorar la calidad de vida, los lazos solidarios, la convivencia pacífica o el cuidado ambiental en el B.O.P. N.° 65 o su entorno barrial en Oberá."
+            ],
+            cuadro: {
+              columnas: ["Fase del Proyecto (ABP)", "Actividad Central Desarrollada", "Principio Ético y Ciudadano Movilizado"],
+              filas: [
+                ["1. Diagnóstico Comunitario", "Relevamiento de una problemática real o necesidad insatisfecha en la escuela o el barrio.", "Pensamiento crítico y sensibilidad social ante la vulneración de derechos."],
+                ["2. Planificación y Metodología", "Definición de objetivos, metas, cronograma y roles de los integrantes del equipo.", "Responsabilidad ciudadana, división justa de tareas y compromiso democrático."],
+                ["3. Ejecución e Intervención", "Puesta en marcha de la acción transformadora (campaña, taller, mejora institucional).", "Solidaridad activa, participación juvenil y cooperación fraterna."],
+                ["4. Evaluación de Impacto", "Balance colectivo de los resultados alcanzados y autocrítica del proceso de aprendizaje.", "Autonomía moral, metacognición y proyección comunitaria."]
+              ]
+            },
+            caso: {
+              titulo: "La selección del proyecto integrador anual del curso",
+              relato: "Al finalizar el año escolar, los alumnos de 3.° año deben presentar su proyecto integrador final. Se debaten tres propuestas: una campaña contra el ciberbullying en redes, un proyecto de separación de residuos y huerta agroecológica escolar, o un taller de mediación entre pares para primer año. El curso se organiza democráticamente para elegir una.",
+              preguntaGuia: "¿De qué manera la ejecución de este proyecto integrador corona los aprendizajes de Formación Ética y Ciudadana del año?"
+            },
+            actividades: [
+              "<strong>Ficha Técnica del Proyecto:</strong> Completá la ficha técnica del Proyecto Integrador Comunitario: a) Denominación del Proyecto; b) Diagnóstico de la problemática a abordar; c) Objetivo general y metas específicas; d) Cronograma de tres actividades fundamentales; e) Principios éticos y ciudadanos movilizados.",
+              "<strong>Reflexión Final:</strong> Redactá una conclusión reflexiva y profunda sobre los aprendizajes teóricos y prácticos más significativos alcanzados durante el ciclo lectivo 2026 en la asignatura.",
+              "<strong>Presentación Áulica:</strong> Prepará la defensa oral de cinco minutos de tu proyecto ante tus compañeros y el docente."
+            ]
+          }
+        ]
+      }
+    ];
+
+    let claseActualId = "c31";
+    let pestanaActual = "teoria";
+
+    function renderizarMenu(filtro = "") {
+      const contenedorMenu = document.getElementById("menu-unidades");
+      contenedorMenu.innerHTML = "";
+      const textoFiltro = filtro.toLowerCase().trim();
+
+      programaCurricular.forEach((unidad) => {
+        const clasesFiltradas = unidad.clases.filter(c => 
+          c.titulo.toLowerCase().includes(textoFiltro) || 
+          c.numero.toLowerCase().includes(textoFiltro) ||
+          unidad.titulo.toLowerCase().includes(textoFiltro)
+        );
+
+        if (textoFiltro && clasesFiltradas.length === 0) return;
+
+        const estaAbierta = textoFiltro ? true : unidad.activa;
+
+        const bloqueUnidad = document.createElement("div");
+        bloqueUnidad.innerHTML = `
+          <button 
+            onclick="toggleUnidad('${unidad.id}')"
+            class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/40 transition"
+          >
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400 block">${unidad.numero}</span>
+              <span class="font-semibold text-sm text-slate-800 dark:text-slate-100">${unidad.titulo}</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 transform transition-transform ${estaAbierta ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="${estaAbierta ? 'block' : 'hidden'} bg-slate-50/70 dark:bg-slate-900/40 px-2 py-1.5 space-y-1">
+            ${clasesFiltradas.map(clase => `
+              <button 
+                onclick="seleccionarClase('${clase.id}')"
+                class="w-full text-left px-3 py-2 rounded-lg text-xs transition flex items-center justify-between gap-2 ${
+                  claseActualId === clase.id 
+                    ? 'bg-institucional-700 text-white font-semibold shadow-sm' 
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-700/60'
+                }"
+              >
+                <span><strong>${clase.numero}:</strong> ${clase.titulo}</span>
+                ${clase.desarrollada 
+                  ? '<span class="px-1.5 py-0.5 text-[10px] rounded bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold shrink-0">Activa</span>' 
+                  : '<span class="px-1.5 py-0.5 text-[10px] rounded bg-slate-300/50 dark:bg-slate-700 text-slate-500 dark:text-slate-400 shrink-0">En cola</span>'
+                }
+              </button>
+            `).join("")}
+          </div>
+        `;
+        contenedorMenu.appendChild(bloqueUnidad);
+      });
+    }
+
+    function toggleUnidad(unidadId) {
+      const unidad = programaCurricular.find(u => u.id === unidadId);
+      if (unidad) {
+        unidad.activa = !unidad.activa;
+        renderizarMenu(document.getElementById("buscador-temas").value);
+      }
+    }
+
+    function seleccionarClase(claseId) {
+      claseActualId = claseId;
+      pestanaActual = "teoria";
+      renderizarMenu(document.getElementById("buscador-temas").value);
+      renderizarClase();
+    }
+
+    function cambiarPestana(nuevaPestana) {
+      pestanaActual = nuevaPestana;
+      renderizarClase();
+    }
+
+    function obtenerDatosClaseActual() {
+      for (const unidad of programaCurricular) {
+        for (const clase of unidad.clases) {
+          if (clase.id === claseActualId) {
+            return { unidad, clase };
+          }
+        }
+      }
+      return null;
+    }
+
+    function renderizarClase() {
+      const datos = obtenerDatosClaseActual();
+      const contenedor = document.getElementById("contenedor-clase");
+      if (!datos) return;
+
+      const { unidad, clase } = datos;
+
+      if (!clase.desarrollada) {
+        contenedor.innerHTML = `
+          <div class="border-b border-slate-200 dark:border-slate-700 pb-4 mb-6">
+            <span class="text-xs font-bold uppercase tracking-widest text-sky-600 dark:text-sky-400">${unidad.numero} — ${unidad.titulo}</span>
+            <h2 class="text-2xl font-bold mt-1">${clase.numero}: ${clase.titulo}</h2>
+          </div>
+          <div class="p-6 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200">
+            <h3 class="font-bold text-base mb-2">Módulo estructurado listo para carga incremental</h3>
+            <p class="text-sm leading-relaxed">
+              Esta clase forma parte del índice oficial extraído de tu cuadernillo <strong>Formación Ética y Ciudadana 2026</strong>. Para evitar recortes de código y garantizar el desarrollo exhaustivo de cada tema, pedime en el chat: <em>"Desarrollá el contenido completo de la ${unidad.numero} desde el cuaderno Ética 2026"</em>.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      let contenidoPestana = "";
+
+      if (pestanaActual === "teoria") {
+        contenidoPestana = `
+          <div class="space-y-4 text-slate-700 dark:text-slate-200 leading-relaxed text-base">
+            ${clase.teoria.map(p => `<p class="text-justify">${p}</p>`).join("")}
+          </div>
+
+          <div class="mt-8">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2">
+              <span class="w-2 h-5 bg-sky-600 rounded-sm inline-block"></span>
+              Cuadro Didáctico de Síntesis para la Carpeta
+            </h3>
+            <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-institucional-800 text-white">
+                    ${clase.cuadro.columnas.map(col => `<th class="p-3.5 font-semibold border-b border-slate-600">${col}</th>`).join("")}
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                  ${clase.cuadro.filas.map((fila, idx) => `
+                    <tr class="${idx % 2 === 0 ? 'bg-white dark:bg-slate-800' : 'bg-slate-50 dark:bg-slate-800/50'}">
+                      ${fila.map((celda, cIdx) => `<td class="p-3.5 ${cIdx === 0 ? 'font-bold text-institucional-700 dark:text-sky-400' : ''}">${celda}</td>`).join("")}
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } else if (pestanaActual === "caso") {
+        contenidoPestana = `
+          <div class="bg-sky-50/70 dark:bg-slate-700/40 border-l-4 border-sky-600 p-6 rounded-r-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-sky-600 text-white">Estudio de Caso / Dilema Práctico</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">Aplicación Situada (3.° Año)</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white">${clase.caso.titulo}</h3>
+            <p class="text-slate-700 dark:text-slate-200 leading-relaxed text-justify text-base">
+              ${clase.caso.relato}
+            </p>
+            <div class="p-4 bg-white dark:bg-slate-800 rounded-lg border border-sky-200 dark:border-slate-600 mt-4">
+              <p class="text-sm font-semibold text-institucional-700 dark:text-sky-300">
+                Pregunta disparadora para el debate en el aula:
+              </p>
+              <p class="text-sm text-slate-700 dark:text-slate-200 mt-1 italic">
+                "${clase.caso.preguntaGuia}"
+              </p>
+            </div>
+          </div>
+        `;
+      } else if (pestanaActual === "actividades") {
+        contenidoPestana = `
+          <div class="space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-emerald-50 dark:bg-emerald-950/30 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800/60">
+              <div>
+                <h3 class="font-bold text-emerald-900 dark:text-emerald-300 text-sm">Guía de Actividades y Análisis Crítico para la Carpeta</h3>
+                <p class="text-xs text-emerald-700 dark:text-emerald-400">Tiempo estimado de resolución áulica: 40 minutos. Respondé con fundamentación teórica.</p>
+              </div>
+              <button 
+                onclick="imprimirFichaAlumno()"
+                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-xs shadow transition flex items-center gap-2 shrink-0 self-start sm:self-auto"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+                Imprimir Ficha del Alumno (PDF)
+              </button>
+            </div>
+
+            <ol class="space-y-4">
+              ${clase.actividades.map((act, i) => `
+                <li class="p-4 rounded-xl bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-700 flex gap-3.5 items-start">
+                  <span class="w-7 h-7 rounded-full bg-institucional-700 text-white font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">
+                    ${i + 1}
+                  </span>
+                  <div class="text-slate-700 dark:text-slate-200 text-sm sm:text-base leading-relaxed">
+                    ${act}
+                  </div>
+                </li>
+              `).join("")}
+            </ol>
+          </div>
+        `;
+      }
+
+      contenedor.innerHTML = `
+        <!-- Encabezado de la Clase -->
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded bg-institucional-100 dark:bg-institucional-900 text-institucional-700 dark:text-sky-300">
+                ${unidad.numero}: ${unidad.titulo}
+              </span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-2">
+              ${clase.numero}: ${clase.titulo}
+            </h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
+              📌 Encuadre Conceptual y Normativo: ${clase.normativa}
+            </p>
+          </div>
+
+          <button 
+            onclick="imprimirFichaAlumno()"
+            class="px-3.5 py-2 bg-institucional-700 hover:bg-institucional-500 text-white font-semibold rounded-lg text-xs shadow-sm transition flex items-center gap-2 shrink-0 self-start"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            </svg>
+            Imprimir Ficha (PDF)
+          </button>
+        </div>
+
+        <!-- Barra de Pestañas Interactivas -->
+        <div class="flex border-b border-slate-200 dark:border-slate-700 mt-6 mb-6 gap-2 overflow-x-auto">
+          <button 
+            onclick="cambiarPestana('teoria')"
+            class="px-4 py-2.5 font-bold text-sm rounded-t-lg border-b-2 transition whitespace-nowrap ${
+              pestanaActual === 'teoria'
+                ? 'border-institucional-700 text-institucional-700 dark:border-sky-400 dark:text-sky-400 bg-slate-50 dark:bg-slate-700/40'
+                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
+            }"
+          >
+            1. Teoría Simple y Cuadro
+          </button>
+          <button 
+            onclick="cambiarPestana('caso')"
+            class="px-4 py-2.5 font-bold text-sm rounded-t-lg border-b-2 transition whitespace-nowrap ${
+              pestanaActual === 'caso'
+                ? 'border-institucional-700 text-institucional-700 dark:border-sky-400 dark:text-sky-400 bg-slate-50 dark:bg-slate-700/40'
+                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
+            }"
+          >
+            2. Caso Práctico Situado
+          </button>
+          <button 
+            onclick="cambiarPestana('actividades')"
+            class="px-4 py-2.5 font-bold text-sm rounded-t-lg border-b-2 transition whitespace-nowrap ${
+              pestanaActual === 'actividades'
+                ? 'border-institucional-700 text-institucional-700 dark:border-sky-400 dark:text-sky-400 bg-slate-50 dark:bg-slate-700/40'
+                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
+            }"
+          >
+            3. Actividades de Clase
+          </button>
+        </div>
+
+        <!-- Contenido Dinámico de la Pestaña -->
+        <div>
+          ${contenidoPestana}
+        </div>
+      `;
+    }
+
+    function filtrarClases(valor) {
+      renderizarMenu(valor);
+    }
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle("dark");
+    }
+
+    function imprimirFichaAlumno() {
+      const datos = obtenerDatosClaseActual();
+      if (!datos || !datos.clase.desarrollada) return;
+      const { unidad, clase } = datos;
+
+      const areaImprimible = document.getElementById("contenido-imprimible");
+      areaImprimible.innerHTML = `
+        <div style="font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.45; color: #000;">
+          <div style="border: 2px solid #000; padding: 12px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; font-size: 9pt; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
+              <span>PROVINCIA DE MISIONES • EDUCACIÓN SECUNDARIA ORIENTADA</span>
+              <span>CICLO LECTIVO 2026</span>
+            </div>
+            <div style="font-size: 13pt; font-weight: bold; text-align: center; margin-bottom: 6px;">
+              FORMACIÓN ÉTICA Y CIUDADANA — 3.° AÑO | FICHA DE CLASE DEL ESTUDIANTE
+            </div>
+            <div style="font-size: 10pt; text-align: center; margin-bottom: 10px;">
+              Docente: Prof. Alberto Carlos Frías • ${unidad.numero}: ${unidad.titulo}
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 10pt; padding-top: 6px; border-top: 1px dotted #000;">
+              <span><strong>Estudiante:</strong> ...........................................................................</span>
+              <span><strong>Curso y División:</strong> 3.° ......</span>
+              <span><strong>Fecha:</strong> ....../....../2026</span>
+            </div>
+          </div>
+
+          <h2 style="font-size: 12pt; font-weight: bold; text-transform: uppercase; border-bottom: 1.5px solid #000; padding-bottom: 4px; margin-bottom: 10px;">
+            ${clase.numero}: ${clase.titulo}
+          </h2>
+
+          <h3 style="font-size: 11pt; font-weight: bold; margin-top: 12px; margin-bottom: 6px;">1. Fundamentación Teórica y Marco Conceptual</h3>
+          ${clase.teoria.map(p => `<p style="text-align: justify; margin-bottom: 8px;">${p}</p>`).join("")}
+
+          <h3 style="font-size: 11pt; font-weight: bold; margin-top: 14px; margin-bottom: 6px;">2. Cuadro Comparativo de Síntesis</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 9.5pt;">
+            <thead>
+              <tr>
+                ${clase.cuadro.columnas.map(c => `<th style="border: 1px solid #000; padding: 6px; background: #eee; text-align: left;">${c}</th>`).join("")}
+              </tr>
+            </thead>
+            <tbody>
+              ${clase.cuadro.filas.map(f => `
+                <tr>
+                  ${f.map(celda => `<td style="border: 1px solid #000; padding: 6px; vertical-align: top;">${celda}</td>`).join("")}
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+
+          <h3 style="font-size: 11pt; font-weight: bold; margin-top: 14px; margin-bottom: 6px;">3. Caso Práctico de Análisis: ${clase.caso.titulo}</h3>
+          <p style="text-align: justify; border: 1px solid #000; padding: 8px; margin-bottom: 14px; background: #fafafa;">
+            ${clase.caso.relato}
+          </p>
+
+          <h3 style="font-size: 11pt; font-weight: bold; margin-top: 14px; margin-bottom: 6px;">4. Actividades Prácticas para la Carpeta</h3>
+          <ol style="padding-left: 20px; margin-bottom: 16px;">
+            ${clase.actividades.map(a => `<li style="margin-bottom: 8px; text-align: justify;">${a}</li>`).join("")}
+          </ol>
+        </div>
+      `;
+
+      window.print();
+    }
+
+    // Inicializar aplicación mostrando directamente la Clase 31 de la Integración Final
+    renderizarMenu();
+    renderizarClase();
+  </script>
+</body>
+</html>
